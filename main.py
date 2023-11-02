@@ -5,3 +5,7 @@ def funct(x: float):
 def find_num(x: int):
     return x * 0.01 - 5.12
 
+
+def test(x):
+    return x
+
