@@ -6,6 +6,6 @@ def find_num(x: int):
     return x * 0.01 - 5.12
 
 
-def test(x):
+def
     return x
 
