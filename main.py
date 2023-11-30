@@ -1,5 +1,5 @@
 #TODO наладить цикл (вроде работает)
-#TODO Мутация
+#TODO Мутация (Зделана)
 #TODO условие вихода
 #TODO Обработка списка
 import random
@@ -12,23 +12,24 @@ def find_num(x: int):
 
 # Определение функции, зависящей от позиции на отрезке
 def custom_function(x: float):
-    # Ваша формула здесь
-    # Например, для примера используем квадрат позиции
     return 0.2*x**4 + 0.3*x**3 - 1.6*x**2 + 0.6*x + 20
 
-
+#
+#Закидываем в список номер, позицию, фитнес-функцию, и двоичный код
 def mutgim(mut_bin):
     mut_num = int(mut_bin, 2)
+
     position0 = find_num(mut_num)
     function_result0 = custom_function(position0)
     return [mut_num, position0, function_result0, mut_bin]
 
-# Создание списка из 50 элементов
+
+# Создание изначального списка
 result_list = []
 
 for i in range(1, 51):
-    # Генерация случайного числа в диапазоне от 1 до 1054
-    random_number = random.randint(1, 1054)
+    # Генерация случайного числа в диапазоне от 1 до 1024
+    random_number = random.randint(1, 1024)
 
     position = find_num(random_number)
 
@@ -36,32 +37,46 @@ for i in range(1, 51):
     function_result = custom_function(position)
 
     # Перевод номера в двоичную систему
-    binary_number = bin(random_number)[2:].zfill(11)
+    binary_number = bin(random_number)[2:].zfill(10)
 
     # Добавление кортежа в список
     result_list.append([random_number, position, function_result, binary_number])
 
 # Ограничение на количество итераций
+min_list = []
+delaitor = 2
 iteration_limit = 100
-
-# Цикл повторяется до тех пор, пока половина чисел не станет одинаковыми
 for iteration in range(iteration_limit):
 
+
+    min_result = float('inf')
+    repeat = 0
+    for l in result_list:
+        function_result = l[2]  # третий элемент в каждом подсписке
+
+        # Если текущий элемент меньше текущего минимального
+        if function_result < min_result:
+            min_result = function_result
+            repeat = 1
+
+        # Если текущий элемент равен текущему минимальному
+        elif function_result == min_result:
+            repeat += 1
+    min_list.append(min_result)
+
     new_list = []
-    # Внутренний цикл для случайной замены двух элементов
+    # Кроссовер и получение нового списка
     for _ in range(25):
         # Рандомный выбор двух элементов из списка с весами (обратное число от позиции на отрезке)
-        selected_elements = random.choices(result_list, weights=[1 / r for r in range(1, 51)], k=2)
+        selected_elements = random.choices(result_list, weights=[1 / r[2] for r in result_list], k=2)
         fir = selected_elements[0]
         sec = selected_elements[1]
         # Рандомный выбор числа k от 1 до длины двоичного числа
         k = random.randint(1, len(fir))
 
-
         # Меняем местами части двоичных чисел
         binary_number1 = fir[3][:k] + sec[3][k:]
         binary_number2 = sec[3][:k] + fir[3][k:]
-
 
         # Переводим новые двоичные числа в десятичные
         new_number1 = int(binary_number1, 2)
@@ -76,11 +91,11 @@ for iteration in range(iteration_limit):
         new_list.append([new_number2, position2, function_result2, binary_number2])
 
     # МУТАЦИЯ
-    if iteration % 4 == 0 and iteration != 0:
+    if iteration % delaitor == 0 and iteration != 0:
         for q in range(0, 1):
             #Создаем index и вытягиваем двоичный код из списка
-            mut_el = new_list[random.randint(0, 49)]  #TODO кудато надо запихнуть
-            key = random.randint(0, len(mut_el[3]) - 1)
+            mut_el = new_list[random.randint(0, 49)]
+            key = random.randint(1, len(mut_el[3]) - 1)
             str = mut_el[3]
 
             # Присвоение полученой мутации и возыращение её всписок
@@ -103,13 +118,21 @@ for iteration in range(iteration_limit):
 
     result_list = new_list.copy()
     print(iteration)
+    if iteration == 50 :
+        pprint(result_list)
+        print('минимальніе числа',min_list)
 
     # Проверяем, половина чисел одинакова или нет
     #if sum(1 for original, updated in zip(original_list, result_list) if original == updated) >= len(result_list) / 2:
    #     break
 
 # Вывод результата
+for kl in min_list:
+    if kl < min_result:
+            min_result = kl
 pprint(result_list)
+print('минимальніе числа',min_list)
+print('минимальное встреченое', min_result)
 
 
 
