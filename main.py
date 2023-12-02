@@ -4,6 +4,8 @@
 #TODO Обработка списка
 import random
 from pprint import pprint
+from numpy import arange
+from numpy import any
 
 
 def find_num(x: int):
@@ -47,22 +49,15 @@ min_list = []
 delaitor = 2
 iteration_limit = 100
 for iteration in range(iteration_limit):
-
-
-    min_result = float('inf')
-    repeat = 0
-    for l in result_list:
-        function_result = l[2]  # третий элемент в каждом подсписке
-
-        # Если текущий элемент меньше текущего минимального
-        if function_result < min_result:
-            min_result = function_result
-            repeat = 1
-
-        # Если текущий элемент равен текущему минимальному
-        elif function_result == min_result:
-            repeat += 1
+    # Нахождение минимального елемента в списке а также количество повторений
+    min_result = min( result_list, key=lambda x: x[2])[2]
+    repeat = result_list.count(min(result_list, key=lambda x: x[2]))
+    # Добавление в список минимальных чисел
     min_list.append(min_result)
+
+    # Проверка выхода
+    if repeat >= 35 and (min_result == min(min_list) or any(min_result == min(min_list) + arange(0, 0.4, 0.1))):
+        break
 
     new_list = []
     # Кроссовер и получение нового списка
@@ -114,25 +109,23 @@ for iteration in range(iteration_limit):
                 mut_bin = str[:key] + sim
                 new_list[new_list.index(mut_el)] = mutgim(mut_bin)
 
-
-
     result_list = new_list.copy()
-    print(iteration)
+    print(iteration, 'минимальное', min_result)
     if iteration == 50 :
         pprint(result_list)
         print('минимальніе числа',min_list)
 
-    # Проверяем, половина чисел одинакова или нет
-    #if sum(1 for original, updated in zip(original_list, result_list) if original == updated) >= len(result_list) / 2:
-   #     break
+
 
 # Вывод результата
-for kl in min_list:
-    if kl < min_result:
-            min_result = kl
+min_find = min(min_list)
+
 pprint(result_list)
-print('минимальніе числа',min_list)
-print('минимальное встреченое', min_result)
+print('Минимальніе числа',min_list)
+print('Минимальное встреченое число', min_find)
+
+print('Результат роботы програмы', min_result)
+print('Количество повторений', repeat)
 
 
 
